@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<% include layout/head %>
+<style>
+    .list-gruop span {
+        position: absolute;
+        line-height: 24px;
+    }
+</style>
+
+<body>
+    <% include layout/nav %>
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-10 offset-1">
+                <h1><%= msg %></h1>
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-dark" style="position: relative;">
+                        <span>순위</span>
+                        <span style="position: absolute; left: 90px;">팀</span>
+                        <span style="position: absolute; left: 310px;"> P</span>
+                        <span style="position: absolute; left: 370px;">W</span>
+                        <span style="position: absolute; left: 430px;">D</span>
+                        <span style="position: absolute; left: 490px;">L</span>
+                        <span style="position: absolute; left: 550px;">득점</span>
+                        <span style="position: absolute; left: 610px;">실점</span>
+                        <span style="position: absolute; left: 670px;">승점</span>
+                    </li>
+                                                                                                                           
+                   <% for(let i = 0; i < list.length; i++) { %>
+                    <li class="list-group-item">
+                        <span><%= i+1 %></span>
+                        <span style="position: absolute; left: 70px;"><img src="<%= list[i].list_img %>"
+                                style="padding-right: 10px"><%= list[i].top20 %></span>
+                        <span style="position: absolute; left: 310px;"><%= list[i].play %></span>
+                        <span style="position: absolute; left: 370px;"><%= list[i].win %></span>
+                        <span style="position: absolute; left: 430px;"><%= list[i].draw %></span>
+                        <span style="position: absolute; left: 490px;"><%= list[i].lose %></span>
+                        <span style="position: absolute; left: 550px;"><%= list[i].goal %></span>
+                        <span style="position: absolute; left: 610px;"><%= list[i].fail %></span>
+                        <span style="position: absolute; left: 670px;"><%= list[i].score %></span>
+                    </li>
+                    <% } %>
+                 
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

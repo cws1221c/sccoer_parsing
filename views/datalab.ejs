@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<% include layout/head %>
+
+<body>
+    <% include layout/nav %>
+    <div class="container">
+
+        <div class="row mt-4">
+
+            <h1>데이터 차트</h1>
+            <div class="col-10 offset-1">
+                <form class="form-inline" method="post">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="word" class="sr-only">검색어</label>
+                        <input type="text" name="title" class="form-control" id="title" placeholder="타이틀 입력">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">검색하기</button>
+                </form>
+
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    new Chart(document.getElementById("myChart"), {
+        "type": "bar",
+        "data": {
+            "labels": [
+                <% if(typeof list != 'undefined') {  %>
+                "P", "W", "D", "L"
+
+               <% } %> 
+            ],
+        "datasets": [{
+                <% if (typeof list != 'undefined') {
+            for (let i = 0; i < list.length; i++) { %>
+               
+                "label": "<%= list[i].team %>",
+                "fill": false, "backgroundColor":  "<%= "#" + Math.round(Math.random() * 0xFFFFFF ).toString(16); %>",
+                "borderColor": "<%= "#" + Math.round(Math.random() * 0xFFFFFF ).toString(16); %>",
+                    "borderWidth": 1,
+                    "data": [
+                <%= list[i].play %>,
+                <%= list[i].win %>,
+                <%= list[i].draw %>,
+                <%= list[i].lose %>,
+                ]
+               <% if(i+1 != list.length){ %>
+                 }, {
+            <% } else{ 
+                 break; } %>
+         
+                <% }
+        } %>
+        
+        }]         
+            }, "options": {
+        "scales": {
+            "yAxes": [{
+                "ticks": {
+                    "beginAtZero": true
+                }
+            }]
+        }
+    }
+        });
+</script>
+
+</html>
