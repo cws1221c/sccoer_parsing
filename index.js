@@ -73,7 +73,7 @@ app.get('/primera', function (req, res) {
             list.push({ top20: top20, list_img: list_img, play: play, win: win, draw: draw, lose: lose, goal: goal, fail: fail, score: score });
         }
 
-        res.render('top', { msg: '라리가 리그 순위', list: list });
+        res.render('top', { msg: '프리메라 리가 리그 순위', list: list });
     });
 });
 app.get('/seria', function (req, res) {
@@ -94,7 +94,7 @@ app.get('/seria', function (req, res) {
             list.push({ top20: top20, list_img: list_img, play: play, win: win, draw: draw, lose: lose, goal: goal, fail: fail, score: score });
         }
 
-        res.render('top', { msg: '세리아A 리그 순위', list: list });
+        res.render('top', { msg: '세리에 A 리그 순위', list: list });
     });
 });
 app.get('/bundesliga', function (req, res) {
@@ -114,7 +114,7 @@ app.get('/bundesliga', function (req, res) {
             let score = $(product_list[i]).find(".p0c-competition-tables__pts").text();
             list.push({ top20: top20, list_img: list_img, play: play, win: win, draw: draw, lose: lose, goal: goal, fail: fail, score: score });
         }
-        res.render('top', { msg: '분데스리가 리그 순위', list: list });
+        res.render('top', { msg: '분데스리가 순위', list: list });
     });
 });
 app.get('/board' ,function(req, res){
@@ -132,15 +132,16 @@ app.post('/board', function (req, res) {
             for (let i = 0; i < product_list.length; i++) {
                 let league = $(".dropdown__btn span:first-child").text();
                 let top20 = $(product_list[i]).find(".p0c-competition-tables__team span").text();
+                let img = $(product_list[i]).find(".p0c-competition-tables__crest").attr("data-srcset");
                 let win = $(product_list[i]).find(".p0c-competition-tables__matches-won").text();
                 let play = $(product_list[i]).find(" .p0c-competition-tables__matches-played").text();
                 let draw = $(product_list[i]).find(".p0c-competition-tables__matches-drawn").text();
                 let lose = $(product_list[i]).find(".p0c-competition-tables__matches-lost").text();
                 let score = $(product_list[i]).find(".p0c-competition-tables__pts").text();
                 list = [
-                    [i+1, league, top20, play, win, draw, lose, score]];
+                    [i+1, league,img, top20, play, win, draw, lose, score]];
                     console.log(league);
-                    let sql = "INSERT INTO soccer (rank, league, team, play, win, draw, lose, score) VALUES ?";
+                    let sql = "INSERT INTO soccer (rank, league, img, team, play, win, draw, lose, score) VALUES ?";
                 conn.query(sql, [list], function (err, result, fields) {
             });
             }
@@ -148,12 +149,12 @@ app.post('/board', function (req, res) {
         });
     }
     
-    let sql = "SELECT * FROM soccer WHERE team LIKE ? ORDER BY rank ASC";
+    let sql = "SELECT * FROM soccer WHERE  (team LIKE ? or league LIKE ?) ORDER BY rank ASC";
     let word = req.body.word;
     word = qs.escape(word);
     word = "%" + req.body.word + "%";
     console.log(word);
-    conn.query(sql, [word], function(err, result){
+    conn.query(sql, [word,word], function(err, result){
         res.render('board', {msg:'검색 결과',list:result});
     });
 });
@@ -162,12 +163,13 @@ app.get('/datalab', function(req, res){
 });
 app.post('/datalab', function(req, res){
     
-    let sql = "SELECT * FROM soccer WHERE team LIKE ?";
-    let title = req.body.title;
-    title = qs.escape(title);
-    title = "%" + req.body.title + "%";
-    console.log(title);
-    conn.query(sql, [title], function(err, result){
+    let sql = "SELECT * FROM soccer WHERE ((league LIKE ?)and(rank <= ?)) ORDER BY rank ASC";
+    let league = req.body.league;
+    league = qs.escape(league);
+    league = "%" + req.body.league + "%";
+    let rank = req.body.rank;
+    rank = qs.escape(rank);
+    conn.query(sql, [league,rank], function(err, result){
         res.render('datalab', { msg: '검색 결과',list:result});
     });
 });
